@@ -1,84 +1,107 @@
+//
+//  HelloWorldScene.cpp
+//  masking
+//
+//  Created by saiy2k on 15/03/13.
+//  Copyright __MyCompanyName__ 2013. All rights reserved.
+//
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
 
 using namespace cocos2d;
 using namespace CocosDenshion;
 
-CCScene* HelloWorld::scene()
-{
-    // 'scene' is an autorelease object
-    CCScene *scene = CCScene::create();
+CCScene* HelloWorld::scene() {
+    CCScene                             *scene;
+    HelloWorld                          *layer;
     
-    // 'layer' is an autorelease object
-    HelloWorld *layer = HelloWorld::create();
-
-    // add layer as a child to scene
+    scene                           =   CCScene::create();
+    layer                           =   HelloWorld::create();
     scene->addChild(layer);
 
-    // return the scene
-    return scene;
+    return                              scene;
 }
 
-// on "init" you need to initialize your instance
-bool HelloWorld::init()
-{
-    //////////////////////////////
-    // 1. super init first
-    if ( !CCLayer::init() )
-    {
-        return false;
-    }
-
-    /////////////////////////////
-    // 2. add a menu item with "X" image, which is clicked to quit the program
-    //    you may modify it.
-
-    // add a "close" icon to exit the progress. it's an autorelease object
-    CCMenuItemImage *pCloseItem = CCMenuItemImage::create(
-                                        "CloseNormal.png",
-                                        "CloseSelected.png",
-                                        this,
-                                        menu_selector(HelloWorld::menuCloseCallback) );
-    pCloseItem->setPosition( ccp(CCDirector::sharedDirector()->getWinSize().width - 20, 20) );
-
-    // create menu, it's an autorelease object
-    CCMenu* pMenu = CCMenu::create(pCloseItem, NULL);
-    pMenu->setPosition( CCPointZero );
-    this->addChild(pMenu, 1);
-
-    /////////////////////////////
-    // 3. add your codes below...
-
-    // add a label shows "Hello World"
-    // create and initialize a label
-    CCLabelTTF* pLabel = CCLabelTTF::create("Hello World", "Thonburi", 34);
-
-    // ask director the window size
-    CCSize size = CCDirector::sharedDirector()->getWinSize();
-
-    // position the label on the center of the screen
-    pLabel->setPosition( ccp(size.width / 2, size.height - 20) );
-
-    // add the label as a child to this layer
-    this->addChild(pLabel, 1);
-
-    // add "HelloWorld" splash screen"
-    CCSprite* pSprite = CCSprite::create("HelloWorld.png");
-
-    // position the sprite on the center of the screen
-    pSprite->setPosition( ccp(size.width/2, size.height/2) );
-
-    // add the sprite as a child to this layer
-    this->addChild(pSprite, 0);
+bool HelloWorld::init() {
+    CCSprite                            *bg;
     
-    return true;
+    if ( !CCLayer::init() )             return false;
+    
+    bg                              =   CCSprite::create("space.png");
+    bg->setPosition( ccp(512, 768/2) );
+    addChild(bg);
+        
+    map                             =   CCSprite::create("worldmap2d.jpg");
+    map->setPosition( ccp(512, 768/2) );
+    map->retain();
+    
+    mask                            =   CCSprite::create("worldmapmask.png");
+    mask->setPosition( ccp(512, 768/2) );
+    mask->retain();
+    
+    masked                          =   maskedSpriteWithSprite(map, mask, 0, 100);
+    addChild(masked);
+    
+    shade                           =   CCSprite::create("worldmapshade.png");
+    shade->setPosition( ccp(512, 768/2) );
+    addChild(shade);
+    
+    this->scheduleUpdate();
+    
+    return                              true;
 }
 
-void HelloWorld::menuCloseCallback(CCObject* pSender)
-{
-    CCDirector::sharedDirector()->end();
+void HelloWorld::update(float dt) {
+    CCSprite                            *m;
+    xoff                            +=  dt * 100;
+    if (xoff > 1024) {
+        xoff                        =   0;
+    }
+    m                               =   maskedSpriteWithSprite(map, mask, xoff, 120);
+    masked->setTexture(m->getTexture());
+}
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
-#endif
+// Credits and Explanation: http://codewars.net/294/masking-sprites-with-cocos2d-x/
+CCSprite* HelloWorld::maskedSpriteWithSprite(CCSprite* pTextureSprite, CCSprite* pMaskSprite, float xoffset, float yoffset)
+{
+    // store the original positions of both sprites
+    CCPoint textureSpriteOrigPosition(pTextureSprite->getPosition().x, pTextureSprite->getPosition().y);
+    CCPoint maskSpriteOrigPosition(pMaskSprite->getPosition().x, pMaskSprite->getPosition().y);
+    
+    // convert the texture sprite position into mask sprite coordinate system
+    pTextureSprite->setPosition(ccp(pTextureSprite->getContentSize().width/2 - pMaskSprite->getPosition().x + pMaskSprite->getContentSize().width/2 - xoffset, pTextureSprite->getContentSize().height/2 - pMaskSprite->getPosition().y + pMaskSprite->getContentSize().height/2 + yoffset));
+    
+    // position the mask sprite so that the bottom left corner lies on the (o,o) coordinates
+    pMaskSprite->setPosition(ccp(pMaskSprite->getContentSize().width/2, pMaskSprite->getContentSize().height/2));
+    
+    CCRenderTexture* rt = CCRenderTexture::renderTextureWithWidthAndHeight((int)pMaskSprite->getContentSize().width, (int)pMaskSprite->getContentSize().height);
+    
+    ccBlendFunc bfMask = ccBlendFunc();
+    bfMask.src = GL_ONE;
+    bfMask.dst = GL_ZERO;
+    pMaskSprite->setBlendFunc(bfMask);
+    
+    // turn off anti-aliasing around the mask sprite
+    pMaskSprite->getTexture()->setAliasTexParameters();
+    
+    ccBlendFunc bfTexture = ccBlendFunc();
+    bfTexture.src = GL_DST_ALPHA;
+    bfTexture.dst = GL_ZERO;
+    pTextureSprite->setBlendFunc(bfTexture);
+    
+    rt->begin();
+    pMaskSprite->visit();
+    pTextureSprite->visit();
+    rt->end();
+    
+    // generate the resulting sprite
+    CCSprite* pOutcome = CCSprite::spriteWithTexture(rt->getSprite()->getTexture());
+    pOutcome->setFlipY(true);
+    
+    // restore the original sprite positions
+    pTextureSprite->setPosition(textureSpriteOrigPosition);
+    pMaskSprite->setPosition(maskSpriteOrigPosition);
+    pOutcome->setPosition(maskSpriteOrigPosition);
+    
+    return pOutcome;
 }

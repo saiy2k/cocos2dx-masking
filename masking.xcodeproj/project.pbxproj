@@ -202,6 +202,10 @@
 		EB516FCE16F31F1500E2203E /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB516FCD16F31F1500E2203E /* HttpClient.cpp */; };
 		EB516FD716F31F1500E2203E /* AppDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB516FD616F31F1500E2203E /* AppDelegate.cpp */; };
 		EB516FDA16F31F1500E2203E /* HelloWorldScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB516FD916F31F1500E2203E /* HelloWorldScene.cpp */; };
+		EB516FE116F32A1200E2203E /* worldmap2d.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EB516FE016F32A1200E2203E /* worldmap2d.jpg */; };
+		EB516FE416F32A5A00E2203E /* worldmapmask.png in Resources */ = {isa = PBXBuildFile; fileRef = EB516FE216F32A5A00E2203E /* worldmapmask.png */; };
+		EB516FE516F32A5A00E2203E /* worldmapshade.png in Resources */ = {isa = PBXBuildFile; fileRef = EB516FE316F32A5A00E2203E /* worldmapshade.png */; };
+		EB516FE716F335B300E2203E /* space.png in Resources */ = {isa = PBXBuildFile; fileRef = EB516FE616F335B300E2203E /* space.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -634,6 +638,10 @@
 		EB516FD616F31F1500E2203E /* AppDelegate.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AppDelegate.cpp; path = Classes/AppDelegate.cpp; sourceTree = "<group>"; };
 		EB516FD816F31F1500E2203E /* HelloWorldScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HelloWorldScene.h; path = Classes/HelloWorldScene.h; sourceTree = "<group>"; };
 		EB516FD916F31F1500E2203E /* HelloWorldScene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = HelloWorldScene.cpp; path = Classes/HelloWorldScene.cpp; sourceTree = "<group>"; };
+		EB516FE016F32A1200E2203E /* worldmap2d.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = worldmap2d.jpg; path = Resources/worldmap2d.jpg; sourceTree = "<group>"; };
+		EB516FE216F32A5A00E2203E /* worldmapmask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = worldmapmask.png; path = Resources/worldmapmask.png; sourceTree = "<group>"; };
+		EB516FE316F32A5A00E2203E /* worldmapshade.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = worldmapshade.png; path = Resources/worldmapshade.png; sourceTree = "<group>"; };
+		EB516FE616F335B300E2203E /* space.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = space.png; path = Resources/space.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -703,6 +711,10 @@
 		EB516D4916F31F0B00E2203E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				EB516FE616F335B300E2203E /* space.png */,
+				EB516FE216F32A5A00E2203E /* worldmapmask.png */,
+				EB516FE316F32A5A00E2203E /* worldmapshade.png */,
+				EB516FE016F32A1200E2203E /* worldmap2d.jpg */,
 				EB516D4A16F31F0B00E2203E /* CloseNormal.png */,
 				EB516D4C16F31F0B00E2203E /* CloseSelected.png */,
 				EB516D4E16F31F0B00E2203E /* Default.png */,
@@ -1585,6 +1597,10 @@
 				EB516D5D16F31F0B00E2203E /* Icon@2x.png in Resources */,
 				EB516D5F16F31F0B00E2203E /* iTunesArtwork in Resources */,
 				EB516DF116F31F0D00E2203E /* ChangeLog in Resources */,
+				EB516FE116F32A1200E2203E /* worldmap2d.jpg in Resources */,
+				EB516FE416F32A5A00E2203E /* worldmapmask.png in Resources */,
+				EB516FE516F32A5A00E2203E /* worldmapshade.png in Resources */,
+				EB516FE716F335B300E2203E /* space.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
